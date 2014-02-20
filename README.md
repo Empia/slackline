@@ -41,5 +41,40 @@ set the ```icon_url``` for the message to be something like
 ```http://[DOMAIN]/avatar/[USER_ID]``` to set the USER_ID based on the
 information from the Outgoing WebHook with no extra requests or state.
 
+## DISCLAIMER
+
+This project is not officially supported by [Slack][slack] and they are
+not responsible for the use you make of this and won't give you any
+support related to this integration.
+
+Now that we are talking disclaimers... I'm not responsible either for
+any use of the software. Use at your own risk and to be safe it might be
+good if you deploy this yourself rather than using my Heroku deployment ;)
+
+## MIT LICENSE
+
+Copyright (C) <2014> Ernesto Jimenez <erjica@gmail.com>
+
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
 [slack]: http://slack.com
 [vizzuality]: http://vizzuality.com
