@@ -69,8 +69,12 @@ func main() {
 		//return "Hello world!"
 	})
 	m.Post("/bridge", func(res http.ResponseWriter, req *http.Request) {
+		username := req.PostFormValue("user_name")
+		if username == "slackbot" {
+			return
+		}
 		msg := slackMessage{
-			Username: req.PostFormValue("user_name"),
+			Username: username,
 			Text:     req.PostFormValue("text"),
 		}
 		token := req.URL.Query().Get("token")
