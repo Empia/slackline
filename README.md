@@ -42,3 +42,4 @@ set the ```icon_url``` for the message to be something like
 information from the Outgoing WebHook with no extra requests or state.
 
 [slack]: http://slack.com
+[vizzuality]: http://vizzuality.com
