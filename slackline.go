@@ -29,6 +29,10 @@ func (s slackMessage) json() (msg string, err error) {
 }
 
 func (s slackMessage) send() (err error) {
+	return s.sendTo(os.Getenv("SLACK_TOKEN"))
+}
+
+func (s slackMessage) sendTo(token string) (err error) {
 	json, err := json.Marshal(s)
 	if err != nil {
 		return
@@ -38,7 +42,7 @@ func (s slackMessage) send() (err error) {
 	content = append(content, json...)
 	reader := bytes.NewReader(content)
 	res, err := http.Post(
-		postMessageURL+os.Getenv("SLACK_TOKEN"),
+		postMessageURL+token,
 		"application/x-www-form-urlencoded",
 		reader,
 	)
@@ -52,9 +56,10 @@ func (s slackMessage) send() (err error) {
 
 func main() {
 	m := martini.Classic()
-	m.Get("/", func() string {
-		message := slackMessage{"#echo", "ernesto", "ernesto, probando, un dos tres"}
-		message.send()
+	m.Get("/", func(res http.ResponseWriter, req *http.Request) string {
+		message := slackMessage{"", "ernesto", "ernesto, probando, un dos tres"}
+		token := req.URL.Query().Get("token")
+		message.sendTo(token)
 		msg, err := message.json()
 		if err != nil {
 			return err.Error()
@@ -63,14 +68,13 @@ func main() {
 		}
 		//return "Hello world!"
 	})
-	m.Post("/post", func(res http.ResponseWriter, req *http.Request) {
+	m.Post("/bridge", func(res http.ResponseWriter, req *http.Request) {
 		msg := slackMessage{
-			Channel:  "#echo",
 			Username: req.PostFormValue("user_name"),
 			Text:     req.PostFormValue("text"),
 		}
-		fmt.Printf("Received %#v\n", msg)
-		err := msg.send()
+		token := req.URL.Query().Get("token")
+		err := msg.sendTo(token)
 		if err != nil {
 			fmt.Printf("Error: %s\n", err.Error())
 			res.WriteHeader(500)
