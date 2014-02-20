@@ -8,10 +8,9 @@ import (
 	"github.com/codegangsta/martini"
 	"io/ioutil"
 	"net/http"
-	"os"
 )
 
-const postMessageURL = "https://espresso.slack.com/services/hooks/incoming-webhook?token="
+const postMessageURL = "/services/hooks/incoming-webhook?token="
 
 type slackMessage struct {
 	Channel  string `json:"channel"`
@@ -28,11 +27,7 @@ func (s slackMessage) json() (msg string, err error) {
 	return
 }
 
-func (s slackMessage) send() (err error) {
-	return s.sendTo(os.Getenv("SLACK_TOKEN"))
-}
-
-func (s slackMessage) sendTo(token string) (err error) {
+func (s slackMessage) sendTo(domain, token string) (err error) {
 	json, err := json.Marshal(s)
 	if err != nil {
 		return
@@ -42,7 +37,7 @@ func (s slackMessage) sendTo(token string) (err error) {
 	content = append(content, json...)
 	reader := bytes.NewReader(content)
 	res, err := http.Post(
-		postMessageURL+token,
+		"https://"+domain+postMessageURL+token,
 		"application/x-www-form-urlencoded",
 		reader,
 	)
@@ -58,8 +53,9 @@ func main() {
 	m := martini.Classic()
 	m.Get("/", func(res http.ResponseWriter, req *http.Request) string {
 		message := slackMessage{"", "ernesto", "ernesto, probando, un dos tres"}
+		domain := req.URL.Query().Get("domain")
 		token := req.URL.Query().Get("token")
-		message.sendTo(token)
+		message.sendTo(domain, token)
 		msg, err := message.json()
 		if err != nil {
 			return err.Error()
@@ -77,8 +73,9 @@ func main() {
 			Username: username,
 			Text:     req.PostFormValue("text"),
 		}
+		domain := req.URL.Query().Get("domain")
 		token := req.URL.Query().Get("token")
-		err := msg.sendTo(token)
+		err := msg.sendTo(domain, token)
 		if err != nil {
 			fmt.Printf("Error: %s\n", err.Error())
 			res.WriteHeader(500)
